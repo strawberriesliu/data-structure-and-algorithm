@@ -13,16 +13,15 @@ public class Code02_LowestLexicography {
 	}
 
 	public static String lowestString(String[] strs) {
-		if (strs == null || strs.length == 0) {
-			return "";
-		}
-		Arrays.sort(strs, new MyComparator());
+		if(strs == null || strs.length == 0) return "";
 		String res = "";
+		Arrays.sort(strs, new MyComparator());
 		for (int i = 0; i < strs.length; i++) {
 			res += strs[i];
 		}
 		return res;
 	}
+
 
 	public static void main(String[] args) {
 		String[] strs1 = { "jibw", "ji", "jp", "bw", "jibw" };
