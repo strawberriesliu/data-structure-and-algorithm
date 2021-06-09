@@ -6,18 +6,19 @@ import java.util.PriorityQueue;
 public class Code03_LessMoneySplitGold {
 
 	public static int lessMoney(int[] arr) {
-		PriorityQueue<Integer> pQ = new PriorityQueue<>();
+		PriorityQueue<Integer> minHeap = new PriorityQueue<>();
 		for (int i = 0; i < arr.length; i++) {
-			pQ.add(arr[i]);
+			minHeap.add(arr[i]);
 		}
 		int sum = 0;
 		int cur = 0;
-		while (pQ.size() > 1) {
-			cur = pQ.poll() + pQ.poll();
+		while (minHeap.size() > 1){
+			cur = minHeap.poll() + minHeap.poll();
 			sum += cur;
-			pQ.add(cur);
+			minHeap.add(cur);
 		}
 		return sum;
+
 	}
 
 	public static class MinheapComparator implements Comparator<Integer> {
