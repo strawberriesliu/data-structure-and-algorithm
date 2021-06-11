@@ -1,9 +1,11 @@
 package Basics.class_07;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
 public class Code05_IPO {
+	// 每个项目由花费和收益两部分组成
 	public static class Node {
 		public int p;
 		public int c;
@@ -14,6 +16,7 @@ public class Code05_IPO {
 		}
 	}
 
+	// 定义项目最小花费的比较器
 	public static class MinCostComparator implements Comparator<Node> {
 
 		@Override
@@ -23,6 +26,7 @@ public class Code05_IPO {
 
 	}
 
+	// 定义项目最大收益的比较器
 	public static class MaxProfitComparator implements Comparator<Node> {
 
 		@Override
@@ -32,27 +36,38 @@ public class Code05_IPO {
 
 	}
 
-	public static int findMaximizedCapital(int k, int W, int[] Profits, int[] Capital) {
-		Node[] nodes = new Node[Profits.length];
+	// 主方法
+	public static int findMaximizedCapital(int k, int W, int[] Profits, int[] Costs) {
+		// 根据花费和收益数组创建对应项目数组
+		ArrayList<Node> nodes = new ArrayList<>();
 		for (int i = 0; i < Profits.length; i++) {
-			nodes[i] = new Node(Profits[i], Capital[i]);
+			nodes.add(new Node(Profits[i], Costs[i]));
 		}
-
-		PriorityQueue<Node> minCostQ = new PriorityQueue<>(new MinCostComparator());
-		PriorityQueue<Node> maxProfitQ = new PriorityQueue<>(new MaxProfitComparator());
-		for (int i = 0; i < nodes.length; i++) {
-			minCostQ.add(nodes[i]);
-		}
+		// 创建小根堆（花费最小）和大根堆（收益最大）
+		PriorityQueue<Node> minCostsHeap = new PriorityQueue<>(new MinCostComparator());
+		PriorityQueue<Node> maxProfitsHeap = new PriorityQueue<>(new MaxProfitComparator());
+		// 将所有项目放入小根堆
+		minCostsHeap.addAll(nodes);
 		for (int i = 0; i < k; i++) {
-			while (!minCostQ.isEmpty() && minCostQ.peek().c <= W) {
-				maxProfitQ.add(minCostQ.poll());
+			// 如果小根堆不为空并且其元素小于等于初始资金，将其解锁弹出放入大根堆中。
+			while(!minCostsHeap.isEmpty() && minCostsHeap.peek().c <= W){
+				maxProfitsHeap.add(minCostsHeap.poll());
 			}
-			if (maxProfitQ.isEmpty()) {
+			// 没有可以做的项目，返回W
+			if(maxProfitsHeap.isEmpty()){
 				return W;
 			}
-			W += maxProfitQ.poll().p;
+			// 将选择的项目收益加入初始资金中，更新初始资金
+			W += maxProfitsHeap.poll().p;
 		}
 		return W;
+	}
+
+	public static void main(String[] args) {
+		int[] Profits = new int[] {5, 6, 3, 9, 10, 4, 1, 3};
+		int[] Costs = new int[] {2, 5, 2, 6, 8, 3, 1, 4};
+		int result = findMaximizedCapital(4, 2, Profits, Costs);
+		System.out.println("完成项目最终获得的最大资金为：" + result);
 	}
 
 }
